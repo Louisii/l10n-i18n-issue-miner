@@ -12,7 +12,7 @@ import argparse
 
 # 
 # EXEMPLO:
-# python mine_issues.py --start-year 2020 --end-year 2025 --interval-days 15 --max-pages 10 --per-page 100
+# python mine_issues.py --start-year 2020 --end-year 2025 --interval-days 30 --max-pages 1 --per-page 10
 #
 
 load_dotenv()  # Load .env variables
@@ -45,8 +45,8 @@ BUG_TYPES = {
 }
 
 DATE_INTERVAL_DAYS = 30
-MAX_PAGES = 10
-RESULTS_PER_PAGE = 100
+MAX_PAGES = 1
+RESULTS_PER_PAGE = 10
 START_YEAR = 2025
 END_YEAR = 2015
 
@@ -57,9 +57,11 @@ END_YEAR = 2015
 def extract_image_urls(text):
     if not text:
         return []
-    pattern = r'!\[.*?\]\((https?://.*?)\)|https?://[^\s"]+\.(?:png|jpg|jpeg|gif|webp)'
-    matches = re.findall(pattern, text)
-    return [m for m in matches if m]
+    # Pega apenas URLs terminando com png, jpg, jpeg, gif ou webp
+    pattern = r'https?://[^\s")]+?\.(?:png|jpg|jpeg|gif|webp)'
+    matches = re.findall(pattern, text, flags=re.IGNORECASE)
+    return matches
+
 
 
 def detect_bug_types(title, body):
